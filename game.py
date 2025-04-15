@@ -20,7 +20,7 @@ while True:
 
 
 def start_menu():
-    pass
+    print("MENU")
 
 def count_words_per_minute():
     pass
@@ -30,3 +30,5 @@ def gm():
 
 def load_words():
     pass
+
+start_menu()
