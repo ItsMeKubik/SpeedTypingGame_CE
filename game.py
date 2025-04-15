@@ -49,7 +49,9 @@ def words_per_minute_mode(words_to_play):
     index = 0
     run = True
     mode = 1
-
+    input(Style.RESET_ALL + "Press ENTER to start...")
+    clear_terminal()
+    countdown()
     time_start = time.time() / 60
     while run:
         print("Type this word: " + Fore.LIGHTBLUE_EX + "{}".format(words_to_play[index]) + Style.RESET_ALL)
