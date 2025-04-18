@@ -93,15 +93,6 @@ def vs_opponent():
     gm(2,opponent_wpm)
 
 def mode_selector(mode : int):
-    """
-    Selects mode based on user input from `start_menu()`.
-
-    Parameters
-    ----------
-    - mode : int
-
-
-    """
     if mode == 1:
         clear_terminal()
         print(Fore.YELLOW + "Mode words per minute mode " + Fore.GREEN + "ENABLED" + Style.RESET_ALL)
