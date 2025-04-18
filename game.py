@@ -1,5 +1,8 @@
 from colorama import Fore, init, Style
-import os,random,time,sys
+import os
+import random
+import time
+import sys
 
 init()
 
@@ -15,9 +18,11 @@ def clear_terminal():
     """
     Clears the terminal screen.
     """
+
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def countdown(seconds=3):
+
     """
     Counts down the given number of seconds.
     """
@@ -110,7 +115,7 @@ def mode_selector(mode : int):
         time.sleep(1)
         clear_terminal()
         sys.exit(0)
-    elif mode != 1 or mode !=2 or mode != 3:
+    elif mode not in [1,2,3]:
         print(Fore.RED + "Wrong input! Try again! Restarting in 3 seconds..." + Style.RESET_ALL)
         time.sleep(3)
         clear_terminal()
