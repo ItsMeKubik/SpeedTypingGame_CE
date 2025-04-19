@@ -6,23 +6,13 @@ import sys
 
 init()
 
-"""DEFINE DIFFICULTIES.
-
-Defines difficulty levels.
-"""
-EASY = random.randint(10,24)
-MEDIUM = random.randint(25,39)
-HARD = random.randint(40,50)
-
 def clear_terminal():
     """
     Clears the terminal screen.
     """
-
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def countdown(seconds=3):
-
     """
     Counts down the given number of seconds.
     """
@@ -38,6 +28,8 @@ def simulate_opponent_progress(opponent_wpm : int):
     Parameters
     ----------
     opponent_wpm: int
+
+    At the end prints the opponent wpm the player has to beat.
     """
     for i in range(4):
         print(Fore.YELLOW + "Opponent is typing...")
@@ -45,6 +37,18 @@ def simulate_opponent_progress(opponent_wpm : int):
     print(f"Opponent has finished typing, his wpm is {opponent_wpm} WPM. Can you beat it?")
 
 def count_words_per_minute(time_start,mode, correct_words : int):
+    """
+    Counts the words per minute player has.
+
+    Parameters
+    ----------
+    time_start: int - Timer to count the start of the game in minutes.
+    mode: int - The game mode player plays.
+    correct_words: int - Number of correct words.
+
+
+    At the end, based on what mode the player is playing, either prints player's typing speed or returns words per minute.
+    """
     end_time = (time.time() / 60)
     final_time = end_time - time_start
     words_per_minute = (correct_words / final_time)
@@ -57,37 +61,58 @@ def count_words_per_minute(time_start,mode, correct_words : int):
         return round(words_per_minute,1)
 
 def load_words():
+    """
+    Loads words the game will use from file then randomly shuffles them.
+    """
     with open("words_to_play.txt") as f:
         words = f.read().split(",")
     random.shuffle(words)
     return words
 
 def words_per_minute_mode():
+    """
+    Words per minute mode.
+    """
     input(Style.RESET_ALL + "Press ENTER to start...")
     clear_terminal()
     countdown()
     gm(1)
 
 def difficulty_chooser():
+    """
+    Allows user to choose from 3 difficulty levels.
+
+    Difficulties are random integers, that simulate opponent words per minute.
+
+    Difficulties
+    -------------
+    - EASY: Number between 10 and 24
+    - MEDIUM: Number between 25 and 39
+    - HARD: Number between 40 and 50
+
+    Any invalid input sets the game difficulty to medium
+    """
     print(Fore.YELLOW + "Please select difficulty (1,2,3)" + Style.RESET_ALL)
     print("1.Easy\n2.Medium\n3.Hard")
     difficulty = input()
-    opponent_wpm = MEDIUM
     if difficulty.isdigit() and (difficulty == "1" or difficulty == "2" or difficulty == "3"):
         if difficulty == "1":
-            opponent_wpm = EASY
+            opponent_wpm = random.randint(10,24)
         elif difficulty == "2":
-            opponent_wpm = MEDIUM
+            opponent_wpm = random.randint(25,39)
         elif difficulty == "3":
-            opponent_wpm = HARD
+            opponent_wpm = random.randint(40,50)
     else:
         print(Fore.RED + "INVALID INPUT! Defaulting to medium difficulty!" + Style.RESET_ALL)
         time.sleep(2)
         clear_terminal()
-        opponent_wpm = MEDIUM
+        opponent_wpm = random.randint(25,39)
     return opponent_wpm
 
 def vs_opponent():
+    """
+    Versus opponent mode.
+    """
     clear_terminal()
     opponent_wpm = difficulty_chooser()
     clear_terminal()
@@ -98,6 +123,22 @@ def vs_opponent():
     gm(2,opponent_wpm)
 
 def mode_selector(mode : int):
+    """
+    Selects game mode player selected in `start_menu()`.
+
+    Parameters
+    ----------
+    mode: int
+
+    Modes
+    ----------
+    - Mode 1: Words per minute mode (Counts words per minute player typed, does not include mistakes)
+    - Mode 2: Vs opponent mode (A race against a fictional opponent. Who has more WpM wins)
+    - Mode 3: Exit the application
+
+
+    Any wrong input restarts the mode selector, allowing player to choose again
+    """
     if mode == 1:
         clear_terminal()
         print(Fore.YELLOW + "Mode words per minute mode " + Fore.GREEN + "ENABLED" + Style.RESET_ALL)
@@ -126,16 +167,16 @@ def start_menu():
     Displays the main menu for the game and handles user input.
 
     The menu allows the user to choose between different game modes:
-        1. Words per minute mode
-        2. Race against an opponent
-        3. Exit the game
+    - Words per minute mode
+    - Race against an opponent
+    - Exit the game
 
     The function validates user input and either proceeds to the selected mode
     via the `mode_selector()` function or prompts the user to enter a valid choice.
     Invalid inputs will trigger an error message and reload the menu after a short delay.
     """
     clear_terminal()
-    print(Fore.LIGHTCYAN_EX + "SPEED TYPING GAME\n- Prusenovský Jakub\n--------------------" + Style.RESET_ALL)
+    print(Fore.LIGHTCYAN_EX + "SPEED TYPING GAME\n--------------------" + Style.RESET_ALL)
     print("Select mode")
     print("1. Words per minute mode ")
     print("2. Race against opponent ")
