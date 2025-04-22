@@ -1,3 +1,9 @@
+"""
+A main game file.
+
+.. include:: README.md
+"""
+
 from colorama import Fore, init, Style
 import os
 import random
@@ -8,18 +14,15 @@ init()
 
 
 def clear_terminal():
-
-    """
-    Clears the terminal screen.
-    """
+    """Clear the terminal screen."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def load_words():
     """
-    Loads words the game will use from file .
+    Load words the game will use from file .
 
-    Return the words in a randomly shuffled array.
+    Returns the words in a randomly shuffled array.
     """
     with open("Assets/words_to_play.txt") as f:
         words = f.read().split(",")
@@ -29,7 +32,12 @@ def load_words():
 
 def countdown(seconds=3):
     """
-    Counts down the given number of seconds.
+    Count down the given number of seconds.
+
+    Parameters
+    ----------
+    - seconds : int, optional
+        - Number of seconds to count.
     """
     for i in range(seconds, 0, -1):
         print(Fore.YELLOW + f"Starting in {i}..." + Style.RESET_ALL)
@@ -72,7 +80,7 @@ def vs_opponent():
 
 def difficulty_chooser():
     """
-    Allows user to choose from 3 difficulty levels.
+    Allow user to choose from 3 difficulty levels.
 
     Difficulties are random integers, that simulate opponent words per minute.
 
@@ -105,7 +113,7 @@ def difficulty_chooser():
 
 def simulate_opponent_progress(opponent_wpm: int):
     """
-    Simulates the opponent progress.
+    Simulate the opponent progress.
 
     Parameters
     ----------
@@ -121,13 +129,16 @@ def simulate_opponent_progress(opponent_wpm: int):
 
 def count_words_per_minute(time_start, mode, correct_words: int):
     """
-    Counts the words per minute player has.
+    Count the words per minute player has.
 
     Parameters
     ----------
-    - time_start: int -- Timer to count the start of the game in minutes.
-    - mode: int -- The game mode player plays.
-    - correct_words: int -- Number of correct words.
+    - time_start: int
+        - Timer to count the start of the game in minutes.
+    - mode: int
+        - The game mode player plays.
+    - correct_words: int
+        - Number of correct words.
 
 
     At the end, based on what mode the player is playing, either prints player's typing speed or returns words per minute.
@@ -145,9 +156,8 @@ def count_words_per_minute(time_start, mode, correct_words: int):
 
 
 def mode_selector(mode: int):
-
     """
-    Selects game mode player selected in `start_menu()`.
+    Select game mode player selected in `start_menu()`.
 
     Parameters
     ----------
@@ -188,7 +198,7 @@ def mode_selector(mode: int):
 
 def start_menu():
     """
-    Displays the main menu for the game and handles user input.
+    Display the main menu for the game and handles user input.
 
     The menu allows the user to choose between different game modes:
     - Words per minute mode
@@ -218,14 +228,14 @@ def start_menu():
 
 def gm(mode: int, opponent_wpm=0):
     """
-    Runs a typing game session where the player types a sequence of words as fast and accurately as possible.
+    Run a typing game session where the player types a sequence of words as fast and accurately as possible.
 
     Parameters:
     -----------
     - mode : int
-        -- The game mode. If mode == 2, the player's speed is compared against an opponent's WPM to determine the result.
+        - The game mode. If mode == 2, the player's speed is compared against an opponent's WPM to determine the result.
     - opponent_wpm : int, optional
-        -- The opponent's words per minute speed, used only when mode == 2 (default is 0).
+        - The opponent's words per minute speed, used only when mode == 2 (default is 0).
 
     Gameplay:
     ---------
@@ -263,10 +273,14 @@ def gm(mode: int, opponent_wpm=0):
     if mode == 2:
         if player_wpm > opponent_wpm:
             print(Fore.LIGHTGREEN_EX + "Congratulations, you won!" + Style.RESET_ALL)
-            print(Fore.YELLOW + "Your speed was: " + Fore.CYAN + str(player_wpm) + " Words per minute" + Style.RESET_ALL)
+            print(Fore.YELLOW + "Your speed was: "
+                  + Fore.CYAN + str(player_wpm) +
+                  " Words per minute" + Style.RESET_ALL)
         elif player_wpm < opponent_wpm:
-            print(Fore.LIGHTRED_EX + "GAME OVER! You lost! Better luck next time!" + Style.RESET_ALL)
-            print(Fore.YELLOW + "Your speed was: " + Fore.CYAN + str(player_wpm) + " Words per minute" + Style.RESET_ALL)
+            print(Fore.LIGHTRED_EX + "GAME OVER! You lost!" + Style.RESET_ALL)
+            print(Fore.YELLOW + "Your speed was: "
+                  + Fore.CYAN + str(player_wpm) +
+                  " Words per minute" + Style.RESET_ALL)
         elif player_wpm == opponent_wpm:
             print(Fore.YELLOW + "Its a draw!" + Style.RESET_ALL)
 

@@ -13,22 +13,27 @@ A console speed typing game made as my uni project.
 ## Installation
 1. **Clone the repository**
     - Navigate where you want to install the game
+    <br/><br/>
     ```bash
     git clone https://github.com/ItsMeKubik/SpeedTypingGame_CE
     cd SpeedTypingGame_CE
+    ```
 
 2. **Install dependencies**
-    ```bash
+   ```bash
    pip install requirements.txt
+   ```
    
 3. **Run the game**
-    ```bash
+   ```bash
    python game.py
+   ```
    
 ## Tests
 - Tests are handled using pytest
     ```bash
     pytest
+    ```
 
 ## License
 Author: Jakub Prusenovský\
