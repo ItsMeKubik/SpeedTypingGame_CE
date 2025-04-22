@@ -21,7 +21,7 @@ def load_words():
 
     Return the words in a randomly shuffled array.
     """
-    with open("words_to_play.txt") as f:
+    with open("Assets/words_to_play.txt") as f:
         words = f.read().split(",")
     random.shuffle(words)
     return words
