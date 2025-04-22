@@ -3,6 +3,7 @@ from unittest.mock import patch, mock_open, call
 import builtins
 import game
 import os
+from colorama import Fore,Style
 
 # Test clear_terminal (just check it calls os.system correctly)
 @patch("os.system")
@@ -51,6 +52,15 @@ def test_simulate_opponent_progress(mock_print, _):
     game.simulate_opponent_progress(30)
     assert call("Opponent has finished typing, his wpm is 30 WPM. Can you beat it?") in mock_print.mock_calls
 
+# Test count_words_per_minute for mode 1 (returns WPM)
+@patch("builtins.print")
+@patch("game.clear_terminal")
+@patch("time.sleep", return_value=None)
+def test_count_words_per_minute_mode_1(_, __,mock_print):
+    time_start = (game.time.time() - 30) / 60  # simulate 30 seconds ago
+    wpm = game.count_words_per_minute(time_start, mode=1, correct_words=15)
+    assert call(Fore.YELLOW + "Your typing speed is: " + Fore.GREEN + str(wpm) + Fore.YELLOW + " Words per minute" + Style.RESET_ALL)
+
 # Test count_words_per_minute for mode 2 (returns WPM)
 @patch("game.clear_terminal")
 @patch("time.sleep", return_value=None)
@@ -75,6 +85,7 @@ def test_difficulty_chooser_easy(_, __, ___):
         result = game.difficulty_chooser()
         assert result == 15
 
+# Test difficulty_chooser with input "2"
 @patch("builtins.input", return_value="2")
 @patch("time.sleep", return_value=None)
 @patch("game.clear_terminal")
@@ -83,6 +94,7 @@ def test_difficulty_chooser_medium(_, __, ___):
         result = game.difficulty_chooser()
         assert result == 30
 
+# Test difficulty_chooser with input "3"
 @patch("builtins.input", return_value="3")
 @patch("time.sleep", return_value=None)
 @patch("game.clear_terminal")
@@ -124,26 +136,60 @@ def test_mode_selector_invalid(mock_print, _, __, mock_start):
     game.mode_selector(99)
     mock_start.assert_called_once()
 
-# Test start_menu with valid and invalid input
-@patch("game.mode_selector")
-@patch("builtins.input", return_value="1")
+# Test valid mode selection (e.g. '1')
 @patch("game.clear_terminal")
-def test_start_menu_valid(_, __, mock_mode_selector):
+@patch("game.mode_selector")
+@patch("game.input", return_value="1")
+def test_start_menu_valid_input(mock_input, mock_mode_selector, mock_clear):
     game.start_menu()
     mock_mode_selector.assert_called_once_with(1)
+    mock_clear.assert_called()
 
-@patch("game.start_menu")
-@patch("builtins.input", return_value="invalid")
-@patch("time.sleep", return_value=None)
+# Test invalid input (non-digit), should retry
 @patch("game.clear_terminal")
-def test_start_menu_invalid(_, __, ___, mock_restart):
+@patch("game.input", side_effect=["abc","3"])
+@patch("game.mode_selector")
+@patch("game.time.sleep")
+def test_start_menu_invalid_then_valid(mock_sleep, mock_mode_selector, mock_input, mock_clear):
     game.start_menu()
-    mock_restart.assert_called_once()
+    assert mock_input.call_count == 2  # Tried twice
+    mock_mode_selector.assert_called_once_with(3)
+    mock_sleep.assert_called_once()
 
-# Test gm function logic (light test)
-#@patch("builtins.input", side_effect=lambda: "test")
-#@patch("game.load_words", return_value=["test"])
-#@patch("game.clear_terminal")
-#@patch("time.sleep", return_value=None)
-#def test_gm_mode1(_, __, ___, ____):
-    #game.gm(mode=1)
+@patch("game.clear_terminal")
+@patch("game.count_words_per_minute", return_value=70)
+@patch("game.load_words", return_value=["HELLO"] * 25)
+@patch("game.input", side_effect=["hello"] * 25)
+@patch("game.time.time", return_value=600.0)  # Simulated start time
+def test_gm_mode_1(mock_time, mock_input, mock_load, mock_count, mock_clear):
+    game.gm(mode=1)
+    assert mock_input.call_count == 25
+    mock_load.assert_called_once()
+    mock_count.assert_called_once_with(10.0, 1, 25)  # 600.0 / 60 = 10.0 start
+    assert mock_clear.call_count > 0
+
+@patch("game.clear_terminal")
+@patch("game.count_words_per_minute", return_value=70)
+@patch("game.load_words", return_value=["HELLO"] * 25)
+@patch("game.input", side_effect=["hello"] * 25)
+@patch("game.time.time", return_value=600.0)
+def test_gm_mode_2_win(mock_time, mock_input, mock_load, mock_count, mock_clear):
+    game.gm(mode=2, opponent_wpm=50)
+    mock_count.assert_called_once_with(10.0, 2, 25)  # Same as before
+    assert mock_input.call_count == 25
+
+@patch("game.clear_terminal")
+@patch("game.count_words_per_minute", return_value=50)
+@patch("game.load_words", return_value=["HELLO"] * 25)
+@patch("game.input", side_effect=["hello"] * 25)
+@patch("game.time.time", return_value=600.0)
+def test_gm_mode_2_draw(mock_time, mock_input, mock_load, mock_count, mock_clear):
+    game.gm(mode=2, opponent_wpm=50)
+
+@patch("game.clear_terminal")
+@patch("game.count_words_per_minute", return_value=40)
+@patch("game.load_words", return_value=["HELLO"] * 25)
+@patch("game.input", side_effect=["hello"] * 25)
+@patch("game.time.time", return_value=600.0)
+def test_gm_mode_2_lose(mock_time, mock_input, mock_load, mock_count, mock_clear):
+    game.gm(mode=2, opponent_wpm=50)
