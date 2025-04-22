@@ -14,7 +14,7 @@ A console speed typing game made as my uni project.
 1. **Clone the repository**
     - Navigate where you want to install the game
     ```bash
-    git clone
+    git clone https://github.com/ItsMeKubik/SpeedTypingGame_CE
     cd SpeedTypingGame_CE
 
 2. **Install dependencies**
