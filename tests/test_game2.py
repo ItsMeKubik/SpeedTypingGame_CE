@@ -142,6 +142,7 @@ def test_mode_selector_invalid(mock_print, _, __, mock_start):
 @patch("game.input", return_value="1")
 def test_start_menu_valid_input(mock_input, mock_mode_selector, mock_clear):
     game.start_menu()
+    mock_input.assert_called_once()
     mock_mode_selector.assert_called_once_with(1)
     mock_clear.assert_called()
 

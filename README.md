@@ -36,5 +36,6 @@ A console speed typing game made as my uni project.
     ```
 
 ## License
-Author: Jakub Prusenovský\
+Author: Jakub Prusenovský
+<br/><br/>
 Code is published under [MIT](https://opensource.org/license/mit) license.
